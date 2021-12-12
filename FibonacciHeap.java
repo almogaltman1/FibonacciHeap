@@ -5,6 +5,14 @@
  */
 public class FibonacciHeap
 {
+    private static int totalLinks = 0;
+    private static int totalCuts = 0;
+    private HeapNode min;
+    private HeapNode first;
+    private int size;
+    private int numberOfTrees;
+    private int numberOfMarkedNodes;
+
 
     /**
      * public boolean isEmpty()
@@ -174,13 +182,78 @@ public class FibonacciHeap
     public static class HeapNode{
 
         public int key;
+        private int rank;
+        private boolean marked;
+        private HeapNode child;
+        private HeapNode next;
+        private HeapNode prev;
+        private HeapNode parent;
+
 
         public HeapNode(int key) {
             this.key = key;
+            this.rank = 0;
+            this.marked = false;
+            this.child = null;
+            this.next = this;
+            this.prev = this;
+            this.parent = null;
         }
 
         public int getKey() {
             return this.key;
+        }
+
+        public void setKey(int k){
+            this.key = k;
+        }
+
+        public int getRank() {
+            return rank;
+        }
+
+        public void setRank(int rank) {
+            this.rank = rank;
+        }
+
+        public boolean isMarked() {
+            return marked;
+        }
+
+        public void setMarked(boolean marked) {
+            this.marked = marked;
+        }
+
+        public HeapNode getChild() {
+            return child;
+        }
+
+        public void setChild(HeapNode child) {
+            this.child = child;
+        }
+
+        public HeapNode getNext() {
+            return next;
+        }
+
+        public void setNext(HeapNode next) {
+            this.next = next;
+        }
+
+        public HeapNode getPrev() {
+            return prev;
+        }
+
+        public void setPrev(HeapNode prev) {
+            this.prev = prev;
+        }
+
+        public HeapNode getParent() {
+            return parent;
+        }
+
+        public void setParent(HeapNode parent) {
+            this.parent = parent;
         }
     }
 }
