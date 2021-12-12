@@ -22,7 +22,7 @@ public class FibonacciHeap
      */
     public boolean isEmpty()
     {
-        return false; // should be replaced by student code
+        return this.size == 0;
     }
 
     /**
@@ -58,7 +58,7 @@ public class FibonacciHeap
      */
     public HeapNode findMin()
     {
-        return new HeapNode(678);// should be replaced by student code
+        return this.min;
     }
 
     /**
@@ -80,7 +80,7 @@ public class FibonacciHeap
      */
     public int size()
     {
-        return -123; // should be replaced by student code
+        return this.size;
     }
 
     /**
@@ -130,7 +130,7 @@ public class FibonacciHeap
      */
     public int potential()
     {
-        return -234; // should be replaced by student code
+        return this.numberOfTrees + 2*numberOfMarkedNodes;
     }
 
     /**
@@ -143,7 +143,7 @@ public class FibonacciHeap
      */
     public static int totalLinks()
     {
-        return -345; // should be replaced by student code
+        return FibonacciHeap.totalLinks;
     }
 
     /**
@@ -155,7 +155,7 @@ public class FibonacciHeap
      */
     public static int totalCuts()
     {
-        return -456; // should be replaced by student code
+        return FibonacciHeap.totalCuts;
     }
 
     /**
