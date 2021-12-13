@@ -35,7 +35,32 @@ public class FibonacciHeap
      */
     public HeapNode insert(int key)
     {
-        return new HeapNode(key); // should be replaced by student code
+        HeapNode newNode = new HeapNode(key);
+        //if first node in heap
+        if (this.isEmpty()){
+            this.min = newNode;
+            this.first = newNode;
+        }
+        else {
+            //check if this is new min
+            if (key < this.min.getKey()){
+                this.min = newNode;
+            }
+            //connect to the heap
+            HeapNode last = this.first.getPrev();
+            HeapNode wasFirst = this.first;
+            this.first = newNode; //insert newNode to the left
+            newNode.setNext(wasFirst);
+            newNode.setPrev(last);
+            //update last and wasFirst fields to point the newNode
+            last.setNext(newNode);
+            wasFirst.setPrev(newNode);
+        }
+        //update heap fields
+        this.numberOfTrees += 1;
+        this.size += 1;
+
+        return newNode;
     }
 
     /**
