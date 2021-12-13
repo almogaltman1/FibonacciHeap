@@ -57,8 +57,8 @@ public class FibonacciHeap
             wasFirst.setPrev(newNode);
         }
         //update heap fields
-        this.numberOfTrees += 1;
-        this.size += 1;
+        this.numberOfTrees++;
+        this.size++;
 
         return newNode;
     }
@@ -195,6 +195,73 @@ public class FibonacciHeap
     {
         int[] arr = new int[100];
         return arr; // should be replaced by student code
+    }
+
+    //helping functions
+
+    /**
+     * private void insertLast(HeapNode newNode)
+     *
+     * Inserts newNode to the end of the heap
+     *
+     */
+    private void insertLast(HeapNode newNode){
+        HeapNode last = this.first.getPrev();
+        //connect to the heap, new node will be last
+        newNode.setPrev(last);
+        newNode.setNext(this.first);
+        //update last and first fields to point the newNode
+        last.setNext(newNode);
+        this.first.setPrev(newNode);
+
+        //update heap fields
+        this.numberOfTrees++;
+        this.size++;
+    }
+
+    /**
+     * private void isolatedRoot(HeapNode root)
+     *
+     * Disconnects the node root from this brothers
+     *
+     */
+    private void isolatedRoot(HeapNode root){
+        HeapNode left = root.getPrev();
+        HeapNode right = root.getNext();
+        //isolate root from his brothers
+        root.setPrev(root);
+        root.setNext(root);
+        //connect the brothers to each other
+        left.setNext(right);
+        right.setPrev(left);
+    }
+
+    /**
+     * private void fixRoots(HeapNode node)
+     *
+     * Node is a pointer to the first node in the current root list, witch need to be updated
+     * Updates roots to be unmarked and parent to be null
+     *
+     */
+    private void fixRoots(HeapNode node){
+        int unmarked = 0;
+        //fix first
+        node.setParent(null);
+        if (node.isMarked()){
+            node.setMarked(false);
+            unmarked++;
+        }
+        //fix all the ohters
+        HeapNode currNode = node.getNext();
+        while (currNode != node){
+            currNode.setParent(null);
+            if (currNode.isMarked()){
+                currNode.setMarked(false);
+                unmarked++;
+            }
+            currNode = currNode.getNext();
+        }
+        this.numberOfMarkedNodes -= unmarked;
     }
 
     /**
