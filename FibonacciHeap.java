@@ -84,7 +84,7 @@ public class FibonacciHeap {
      */
     public void meld(FibonacciHeap heap2) {
 
-        if (!heap2.isEmpty()) {
+        if (heap2!=null && !heap2.isEmpty()) {
             if (this.isEmpty()) {
                 this.first = heap2.first;
                 this.min = heap2.min;
@@ -103,11 +103,10 @@ public class FibonacciHeap {
                 heap2.first.setPrev(lastInThis);
 
             }
+            this.size = this.size + heap2.size;
+            this.numberOfTrees = this.numberOfTrees + heap2.numberOfTrees;
+            this.numberOfMarkedNodes = this.numberOfMarkedNodes + heap2.numberOfMarkedNodes;
         }
-
-        this.size = this.size + heap2.size;
-        this.numberOfTrees = this.numberOfTrees + heap2.numberOfTrees;
-        this.numberOfMarkedNodes = this.numberOfMarkedNodes + heap2.numberOfMarkedNodes;
 
     }
 
@@ -146,7 +145,7 @@ public class FibonacciHeap {
 
         next = this.first;
         do {
-            countersRepArr[next.getRank()]+=1;
+            countersRepArr[next.getRank()]++;
             next = next.getNext();
         }
         while (next != this.first);
@@ -172,7 +171,7 @@ public class FibonacciHeap {
      */
     public void decreaseKey(HeapNode x, int delta) {
         x.setKey(x.getKey()-delta);
-        if (x.getParent()!=null && x.getKey()<x.getParent().getKey()){
+        if (x.getParent()!=null && x.getKey()<x.getParent().getKey()){ // not root and heap rules are broken
             cascadingCuts(x);
         }
 
@@ -305,14 +304,14 @@ public class FibonacciHeap {
      */
     protected void cascadingCuts(HeapNode node){
         cut(node);
-        HeapNode nodeParent = node.getParent();
-        if(nodeParent.getParent()!=null){
-            if (!nodeParent.isMarked()){
-                nodeParent.setMarked(true);
-                numberOfMarkedNodes+=1;
+        node = node.getParent();
+        if(node.getParent()!=null){
+            if (!node.isMarked()){
+                node.setMarked(true);
+                numberOfMarkedNodes++;
             }
             else{
-                cascadingCuts(nodeParent);
+                cascadingCuts(node);
             }
         }
     }
@@ -336,7 +335,7 @@ public class FibonacciHeap {
         //update node parent and brothers related fields
         nodeParent.setRank(nodeParent.getRank()-1);
 
-        if (node.getNext()==node){
+        if (node.getNext()==node){ // means node is only child of its parent
             nodeParent.setChild(null);
         }
         else{
@@ -357,9 +356,9 @@ public class FibonacciHeap {
 
         // update tree related fields
         this.first=node;
-        this.numberOfTrees+=1;
-        this.numberOfMarkedNodes-=1;
-        totalCuts+=1;
+        this.numberOfTrees++;
+        this.numberOfMarkedNodes--;
+        totalCuts++;
 
     }
 
