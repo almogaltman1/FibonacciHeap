@@ -205,7 +205,8 @@ public class FibonacciHeap {
      * It is assumed that x indeed belongs to the heap.
      */
     public void delete(HeapNode x) {
-        return; // should be replaced by student code
+        decreaseKey(x,x.getKey()-this.min.getKey()+1);
+        deleteMin();
     }
 
     /**
@@ -293,10 +294,9 @@ public class FibonacciHeap {
 
         //update heap fields
         this.numberOfTrees++;
-        this.size++;
     }
 
-    // TODO: is the precondition valid?
+    // TODO: is the precondition valid? validate new logic in this function
 
     /**
      * private void isolatedRoot(HeapNode root)
@@ -305,14 +305,14 @@ public class FibonacciHeap {
      * precondition: root.parent() == null (root is actually root)
      */
     private void isolatedRoot(HeapNode root) {
-        HeapNode left = root.getPrev();
-        HeapNode right = root.getNext();
+//        HeapNode left = root.getPrev();
+//        HeapNode right = root.getNext();
         //isolate root from his brothers
         root.setPrev(root);
         root.setNext(root);
         //connect the brothers to each other
-        left.setNext(right);
-        right.setPrev(left);
+//        left.setNext(right);
+//        right.setPrev(left);
     }
 
     /**
@@ -415,13 +415,25 @@ public class FibonacciHeap {
         return this.first;
     }
 
+
     /**
-     * private void link(HeapNode h1, HeapNode h2)
-     * connect 2 trees with the same rank from the heap
+     * private void successiveLinking()
+     * Conducts a successive linking on the heap
+     */
+    private void successiveLinking() {
+        int arrSize = (int) (2 * (Math.log(this.size) / Math.log(2))) + 1;
+        HeapNode[] buckets = new HeapNode[arrSize];
+        toBuckets(buckets);
+        fromBuckets(buckets);
+    }
+
+    /**
+     * private HeapNode link(HeapNode h1, HeapNode h2)
+     * connect 2 trees with the same rank from the heap. Returns the root of the joined tree
      * precondition: h1.getParent()!=null && h2.getParent()!=null
      * precondition: h1.getRank()==h2.getRank()
      */
-    private void link(HeapNode h1, HeapNode h2) {
+    private HeapNode link(HeapNode h1, HeapNode h2) {
         HeapNode root = h1;//initialize root as h1
         HeapNode son = h2;//initialize son as h2
         if (h2.getKey() < h1.getKey()) {// switch if needed
@@ -443,6 +455,55 @@ public class FibonacciHeap {
         root.setChild(son);
         root.setRank(root.getRank() + 1);
         FibonacciHeap.totalLinks++;
+
+        return root;
+    }
+
+
+    /**
+     * private void toBuckets(HeapNode[] buckets)
+     * Changes heap to an array in the successive link process as we saw in class
+     */
+    private void toBuckets(HeapNode[] buckets) {
+        HeapNode x = this.first;
+        HeapNode y;
+        x.getPrev().setNext(null);
+        while (x != null) {
+            y = x;
+            x = x.getNext();
+            isolatedRoot(y);
+            while (buckets[y.getRank()] != null) {
+                //no place in the correct cell
+                y = link(y, buckets[y.getRank()]);
+                buckets[y.getRank() - 1] = null;
+            }
+            buckets[y.getRank()] = y;
+        }
+
+        // actual heap is empty and the heap is in an array
+        this.first = null;
+        this.min = null;
+        this.numberOfTrees = 0;
+
+    }
+
+    /**
+     * private void fromBuckets(HeapNode[] buckets)
+     * Changes array back into heap form
+     */
+    private void fromBuckets(HeapNode[] buckets) {
+        for (int i = 0; i < buckets.length; i++) {
+            if (buckets[i] != null) {
+                if (this.first == null) {
+                    this.min = buckets[i];
+                    this.first = buckets[i];
+                }
+                insertLast(buckets[i]);
+                if (buckets[i].getKey() < this.min.getKey()) {
+                    this.min = buckets[i];
+                }
+            }
+        }
     }
 
     /**
