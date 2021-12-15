@@ -65,8 +65,7 @@ public class FibonacciHeap {
      */
     public void deleteMin() {
 
-        if(this.isEmpty())
-        {
+        if (this.isEmpty()) {
             //do nothing
             return;
         }
@@ -79,17 +78,15 @@ public class FibonacciHeap {
         HeapNode minNext = this.min.getNext();
         HeapNode firstChild = this.min.getChild();
 
-        if (this.size ==0){ //min was only noe in heap, turn heap to by empty
+        if (this.size == 0) { //min was only noe in heap, turn heap to by empty
             this.first = null;
             this.min = null;
             return;
-        }
-        else if (firstChild != null){ //min has child
+        } else if (firstChild != null) { //min has child
             fixRoots(firstChild); //fixing the children of min, because they will become roots
-            if (this.min == minNext){ //min has child and not brothers, so min is also first
+            if (this.min == minNext) { //min has child and not brothers, so min is also first
                 this.first = firstChild;
-            }
-            else { //min has child and brother
+            } else { //min has child and brother
                 HeapNode lastChild = firstChild.getPrev();
                 //update heap to have deleted min children as roots instead of min
                 minPrev.setNext(firstChild);
@@ -97,9 +94,8 @@ public class FibonacciHeap {
                 minNext.setPrev(lastChild);
                 lastChild.setNext(minNext);
             }
-        }
-        else { //min has brother and not child
-            if (this.first == min){ //if min was first, update
+        } else { //min has brother and not child
+            if (this.first == min) { //if min was first, update
                 this.first = minNext;
             }
             //bypass the min in the root list
@@ -133,7 +129,7 @@ public class FibonacciHeap {
      */
     public void meld(FibonacciHeap heap2) {
 
-        if (heap2!=null && !heap2.isEmpty()) {
+        if (heap2 != null && !heap2.isEmpty()) {
             if (this.isEmpty()) {
                 this.first = heap2.first;
                 this.min = heap2.min;
@@ -176,7 +172,7 @@ public class FibonacciHeap {
      */
     public int[] countersRep() {
 
-        if (this.isEmpty()){
+        if (this.isEmpty()) {
             return new int[0];
         }
 
@@ -190,7 +186,7 @@ public class FibonacciHeap {
         }
         while (next != this.first);
 
-        int[] countersRepArr = new int[maxRank+1];
+        int[] countersRepArr = new int[maxRank + 1];
 
         next = this.first;
         do {
@@ -219,13 +215,13 @@ public class FibonacciHeap {
      * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
      */
     public void decreaseKey(HeapNode x, int delta) {
-        x.setKey(x.getKey()-delta);
-        if (x.getParent()!=null && x.getKey()<x.getParent().getKey()){ // not root and heap rules are broken
+        x.setKey(x.getKey() - delta);
+        if (x.getParent() != null && x.getKey() < x.getParent().getKey()) { // not root and heap rules are broken
             cascadingCuts(x);
         }
 
-        if (x.getKey()<this.min.getKey()){
-            this.min=x;
+        if (x.getKey() < this.min.getKey()) {
+            this.min = x;
         }
 
     }
@@ -301,6 +297,7 @@ public class FibonacciHeap {
     }
 
     // TODO: is the precondition valid?
+
     /**
      * private void isolatedRoot(HeapNode root)
      * <p>
@@ -346,6 +343,7 @@ public class FibonacciHeap {
     }
 
     // TODO: change this function to private
+
     /**
      * private void cascadingCuts(HeapNode node)
      * <p>
@@ -353,21 +351,21 @@ public class FibonacciHeap {
      * Recursive function which performs a cascading cut process starting at node
      * precondition: node.getParent()!=null
      */
-    protected void cascadingCuts(HeapNode node){
+    protected void cascadingCuts(HeapNode node) {
         cut(node);
         node = node.getParent();
-        if(node.getParent()!=null){
-            if (!node.isMarked()){
+        if (node.getParent() != null) {
+            if (!node.isMarked()) {
                 node.setMarked(true);
                 numberOfMarkedNodes++;
-            }
-            else{
+            } else {
                 cascadingCuts(node);
             }
         }
     }
 
     // TODO: change this function to private
+
     /**
      * private void cut(HeapNode node)
      * <p>
@@ -375,7 +373,7 @@ public class FibonacciHeap {
      * Cuts node from its parent
      * precondition: node.getParent()!=null
      */
-    protected void cut(HeapNode node){
+    protected void cut(HeapNode node) {
 
         HeapNode nodeParent = node.getParent();
 
@@ -384,13 +382,12 @@ public class FibonacciHeap {
         node.setMarked(false);
 
         //update node parent and brothers related fields
-        nodeParent.setRank(nodeParent.getRank()-1);
+        nodeParent.setRank(nodeParent.getRank() - 1);
 
-        if (node.getNext()==node){ // means node is only child of its parent
+        if (node.getNext() == node) { // means node is only child of its parent
             nodeParent.setChild(null);
-        }
-        else{
-            if(nodeParent.getChild()==node){
+        } else {
+            if (nodeParent.getChild() == node) {
                 nodeParent.setChild(node.getNext());
             }
             node.getPrev().setNext(node.getNext());
@@ -406,16 +403,46 @@ public class FibonacciHeap {
         firstBeforeCut.setPrev(node);
 
         // update tree related fields
-        this.first=node;
+        this.first = node;
         this.numberOfTrees++;
         this.numberOfMarkedNodes--;
-        totalCuts++;
+        FibonacciHeap.totalCuts++;
 
     }
 
     //TODO: delete getFirst() before handing in the project
     public HeapNode getFirst() {
         return this.first;
+    }
+
+    /**
+     * private void link(HeapNode h1, HeapNode h2)
+     * connect 2 trees with the same rank from the heap
+     * precondition: h1.getParent()!=null && h2.getParent()!=null
+     * precondition: h1.getRank()==h2.getRank()
+     */
+    private void link(HeapNode h1, HeapNode h2) {
+        HeapNode root = h1;//initialize root as h1
+        HeapNode son = h2;//initialize son as h2
+        if (h2.getKey() < h1.getKey()) {// switch if needed
+            root = h2;
+            son = h1;
+        }
+
+        HeapNode firstChild = root.child;
+        if (firstChild != null) {//case when root has child
+            HeapNode lastChild = firstChild.getPrev();
+            son.setNext(firstChild);
+            firstChild.setPrev(son);
+            son.setPrev(lastChild);
+            lastChild.setNext(son);
+        }
+
+        //update son to be root's first child
+        son.setParent(root);
+        root.setChild(son);
+        root.setRank(root.getRank() + 1);
+        FibonacciHeap.totalLinks++;
     }
 
     /**
