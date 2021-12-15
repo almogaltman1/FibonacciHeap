@@ -64,6 +64,55 @@ public class FibonacciHeap {
      * Deletes the node containing the minimum key.
      */
     public void deleteMin() {
+
+        if(this.isEmpty())
+        {
+            //do nothing
+            return;
+        }
+
+        //update fields of heap
+        this.size--;
+        this.numberOfTrees = this.numberOfTrees - 1 + this.min.getRank();
+
+        HeapNode minPrev = this.min.getPrev();
+        HeapNode minNext = this.min.getNext();
+        HeapNode firstChild = this.min.getChild();
+
+        if (this.size ==0){ //min was only noe in heap, turn heap to by empty
+            this.first = null;
+            this.min = null;
+            return;
+        }
+        else if (firstChild != null){ //min has child
+            fixRoots(firstChild); //fixing the children of min, because they will become roots
+            if (this.min == minNext){ //min has child and not brothers, so min is also first
+                this.first = firstChild;
+            }
+            else { //min has child and brother
+                HeapNode lastChild = firstChild.getPrev();
+                //update heap to have deleted min children as roots instead of min
+                minPrev.setNext(firstChild);
+                firstChild.setPrev(minPrev);
+                minNext.setPrev(lastChild);
+                lastChild.setNext(minNext);
+            }
+        }
+        else { //min has brother and not child
+            if (this.first == min){ //if min was first, update
+                this.first = minNext;
+            }
+            //bypass the min in the root list
+            minPrev.setNext(minNext);
+            minNext.setPrev(minPrev);
+        }
+
+        this.min.setChild(null);
+        isolatedRoot(this.min); //min is no longer in the heap
+
+        //linking and update min!!!!!!!!!!! - update: min, number of trees, number of links
+
+
         return; // should be replaced by student code
 
     }
@@ -251,10 +300,12 @@ public class FibonacciHeap {
         this.size++;
     }
 
+    // TODO: is the precondition valid?
     /**
      * private void isolatedRoot(HeapNode root)
      * <p>
      * Disconnects the node root from this brothers
+     * precondition: root.parent() == null (root is actually root)
      */
     private void isolatedRoot(HeapNode root) {
         HeapNode left = root.getPrev();
