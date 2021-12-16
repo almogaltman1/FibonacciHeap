@@ -272,7 +272,31 @@ public class FibonacciHeap {
      * ###CRITICAL### : you are NOT allowed to change H.
      */
     public static int[] kMin(FibonacciHeap H, int k) {
-        int[] arr = new int[100];
+        int[] arr = new int[k];;
+        if (H.isEmpty() || k<=0){
+            return arr;
+        }
+
+        FibonacciHeap minHeap = new FibonacciHeap();
+        HeapNode currMin = H.findMin();
+        for (int i=0; i<k;i++){
+            //insert next smallset value to arr
+            arr[i] = currMin.getKey();
+            //insert children of currMin to minHeap
+            HeapNode child = currMin.getChild();
+            if (child != null){
+                //if currMin have children, insert to minHeap
+                for(int c=0;c<currMin.getRank();c++){
+                    minHeap.insert(child.getKey());
+                    child = child.getNext();
+                }
+            }
+            currMin = minHeap.findMin();
+            minHeap.deleteMin();
+        }
+
+
+
         return arr; // should be replaced by student code
     }
 
