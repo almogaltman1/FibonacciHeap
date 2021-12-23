@@ -2,7 +2,6 @@ import java.util.Arrays;
 
 public class Tester {
     public static void main(String[] args) {
-
         test1();
 //
 //        FibonacciHeap h = new FibonacciHeap();
