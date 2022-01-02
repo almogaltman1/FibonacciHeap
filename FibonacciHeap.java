@@ -302,10 +302,12 @@ public class FibonacciHeap {
             }
             //update currMin and minHeap for the next iteration
             HeapNode fictiveCurrMin = minHeap.findMin();
-            currMin = fictiveCurrMin.getConnectionForkMin();
-            minHeap.deleteMin();
-        }
+            if (fictiveCurrMin != null){
+                currMin = fictiveCurrMin.getConnectionForkMin();
+                minHeap.deleteMin();
+            }
 
+        }
         return arr;
     }
 
@@ -567,7 +569,6 @@ public class FibonacciHeap {
         private HeapNode prev;
         private HeapNode parent;
         private HeapNode connectionForkMin;
-
 
         public HeapNode(int key) {
             this.key = key;
