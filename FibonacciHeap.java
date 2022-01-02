@@ -1,3 +1,10 @@
+/*
+id: 209160415, 318514791
+names: Almog Altman, Daniel Jaffe
+user_names: almogaltman1, danieljaffe
+ */
+
+
 /**
  * FibonacciHeap
  * <p>
@@ -451,11 +458,6 @@ public class FibonacciHeap {
         FibonacciHeap.totalCuts++;
     }
 
-    //TODO: delete getFirst() before handing in the project
-    public HeapNode getFirst() {
-        return this.first;
-    }
-
     /**
      * private void successiveLinking()
      * Conducts a successive linking on the heap
@@ -552,6 +554,7 @@ public class FibonacciHeap {
             }
         }
     }
+
 
     /**
      * public class HeapNode
